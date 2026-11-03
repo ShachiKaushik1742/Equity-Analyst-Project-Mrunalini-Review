@@ -1,8 +1,4 @@
-"""Evidence-bound verifier adapted from OpenAI's financial research example.
-
-The deterministic pass works without an API key. The optional model pass uses
-the OpenAI Agents SDK and the OpenAI-compatible endpoint in ``.env``.
-"""
+"""Evidence-bound verifier used as the final node of the CrewAI Flow."""
 
 from __future__ import annotations
 
@@ -296,77 +292,10 @@ def audit_saved_run(run_folder: Path, report_path: Path | None = None) -> Verifi
     )
 
 
-def _load_env(path: Path) -> dict[str, str]:
-    values: dict[str, str] = {}
-    if not path.exists():
-        return values
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        values[key.strip()] = value.strip().strip('"').strip("'")
-    return values
-
-
-def run_model_verifier(
-    run_folder: Path, deterministic: VerificationResult, env_path: Path
-) -> dict[str, Any]:
-    try:
-        from agents import Agent, OpenAIChatCompletionsModel, Runner, set_tracing_disabled
-        from openai import AsyncOpenAI
-        from pydantic import BaseModel
-    except ImportError as error:
-        raise RuntimeError("Install requirements.txt before using --model-check") from error
-
-    class ModelVerificationIssue(BaseModel):
-        claim: str
-        mark: Literal["wrong", "unsupported"]
-        explanation: str
-        correction: str = ""
-        source: str = ""
-
-    class ModelVerificationResult(BaseModel):
-        verified: bool
-        issues: list[ModelVerificationIssue]
-
-    env = _load_env(env_path)
-    if not env.get("API_KEY"):
-        raise ValueError("Missing API_KEY in .env")
-    client = AsyncOpenAI(
-        api_key=env["API_KEY"],
-        base_url=env.get("BASE_URL", "https://genai.rcac.purdue.edu/api"),
-        timeout=180.0,
-        max_retries=1,
-    )
-    model_name = env.get("MODEL", "llama3.1:latest")
-    model = OpenAIChatCompletionsModel(model=model_name, openai_client=client)
-    prompt = (Path(__file__).parent / "roles" / "verifier.md").read_text(encoding="utf-8")
-    agent = Agent(
-        name="VerificationAgent",
-        instructions=prompt,
-        model=model,
-        output_type=ModelVerificationResult,
-    )
-    set_tracing_disabled(True)
-    report = (run_folder / "report.md").read_text(encoding="utf-8")
-    payload = {
-        "report_without_investment_thesis": report.split("## 5. Investment Recommendation", 1)[0],
-        "deterministic_checks": deterministic.to_dict(),
-        "facts": _read_json(run_folder / "facts.json"),
-        "ratios": _read_json(run_folder / "ratios.json"),
-        "release_evidence": _read_json(run_folder / "release_evidence.json"),
-    }
-    result = Runner.run_sync(agent, json.dumps(payload, ensure_ascii=False))
-    return result.final_output_as(ModelVerificationResult).model_dump(mode="json")
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("run_folder", type=Path, help="Saved run folder under outputs/")
     parser.add_argument("--report", type=Path, help="Alternate report to verify against the run evidence")
-    parser.add_argument("--model-check", action="store_true", help="Also run the Agents SDK verifier")
-    parser.add_argument("--env", type=Path, default=Path(".env"), help="Environment file for --model-check")
     parser.add_argument("--output", type=Path, help="Write the JSON result to this path")
     return parser.parse_args()
 
@@ -375,8 +304,6 @@ def main() -> int:
     args = parse_args()
     deterministic = audit_saved_run(args.run_folder, args.report)
     output: dict[str, Any] = {"deterministic": deterministic.to_dict()}
-    if args.model_check:
-        output["model"] = run_model_verifier(args.run_folder, deterministic, args.env)
     rendered = json.dumps(output, indent=2, ensure_ascii=False)
     if args.output:
         args.output.write_text(rendered + "\n", encoding="utf-8")

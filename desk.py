@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Filing-first data desk and four-role report app for FIN 67110 Labs 02 and 03."""
+"""Filing-first data desk used by the FIN 67110 CrewAI Flow."""
 
 from __future__ import annotations
 
@@ -9,13 +9,25 @@ import re
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urljoin
 
-import requests
-from bs4 import BeautifulSoup
-from openai import OpenAI
+try:
+    import requests
+except ImportError:  # Calculation-only tests do not need network packages.
+    requests = None  # type: ignore[assignment]
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:  # Calculation-only tests do not parse filing HTML.
+    BeautifulSoup = None  # type: ignore[assignment,misc]
+
+try:
+    from openai import OpenAI
+except ImportError:  # Calculation-only tests do not call a model.
+    OpenAI = Any  # type: ignore[assignment,misc]
 
 
 SEC_WWW = "https://www.sec.gov"
@@ -254,6 +266,38 @@ def html_to_text(html: str) -> str:
 
 
 def table_rows(html: str) -> list[str]:
+    if BeautifulSoup is None:
+        class TableParser(HTMLParser):
+            def __init__(self) -> None:
+                super().__init__()
+                self.in_cell = False
+                self.cell_parts: list[str] = []
+                self.current_row: list[str] = []
+                self.rows: list[str] = []
+
+            def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+                if tag in {"td", "th"}:
+                    self.in_cell = True
+                    self.cell_parts = []
+
+            def handle_data(self, data: str) -> None:
+                if self.in_cell:
+                    self.cell_parts.append(data)
+
+            def handle_endtag(self, tag: str) -> None:
+                if tag in {"td", "th"} and self.in_cell:
+                    value = re.sub(r"\s+", " ", " ".join(self.cell_parts)).strip()
+                    if value:
+                        self.current_row.append(value)
+                    self.in_cell = False
+                elif tag == "tr" and self.current_row:
+                    self.rows.append(" | ".join(self.current_row))
+                    self.current_row = []
+
+        parser = TableParser()
+        parser.feed(html)
+        return parser.rows
+
     soup = BeautifulSoup(html, "html.parser")
     rows: list[str] = []
     for row in soup.find_all("tr"):
@@ -601,11 +645,9 @@ STRATEGY_MANAGER_SYSTEM = (
     "You are the Strategy Manager on an equity-research desk (Francis & Zhang 2026, Figure 1).\n"
     "Check the three role outputs for completeness, source support, and consistency.\n"
     "The final report must have exactly five required parts.\n"
-    "Return one JSON object only. The object must have status, revision_role, "
-    "revision_instructions, and report_markdown.\n"
-    "Set status to 'revise' only when one role must correct a failing part. "
-    "Set revision_role to Research Analyst, Financial Analyst, Investment Advisor, or an empty string.\n"
-    "If the inputs pass, set status to 'pass' and compile report_markdown.\n"
+    "Return one JSON object with report_markdown.\n"
+    "Do not select a role, route, or next step. CrewAI Flow code fixes the order, "
+    "and Python has already handled the bounded revision slot.\n"
     "Do not add facts or numbers that are absent from the role outputs."
 )
 
@@ -1352,19 +1394,11 @@ def run() -> Path | None:
     print(f"Saved run folder: {run_folder}")
 
     if target is None and not args.no_roles:
-        model_client, model_name = get_model_client(env_path)
-        run_four_roles(
-            client=model_client,
-            model=model_name,
-            run_folder=run_folder,
-            filings=filings,
-            facts=facts,
-            ratios=ratios,
-            evidence=evidence,
-            peers=peer_results,
-            run_time=run_time,
-            metadata=metadata,
-        )
+        # Import here to avoid a module cycle: the Flow reuses the data-desk
+        # evidence helpers above. CrewAI's decorators fix the role order.
+        from crewai_flow import run_flow
+
+        run_flow(run_folder)
 
     return run_folder
 

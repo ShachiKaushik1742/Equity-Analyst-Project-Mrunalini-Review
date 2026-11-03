@@ -1,6 +1,6 @@
 # Equity Research Desk
 
-This repository contains the filing-first data desk and four-role report app for FIN 67110 Labs 02 and 03.
+This repository contains the filing-first data desk and CrewAI Flow for FIN 67110.
 
 ## Setup
 
@@ -22,7 +22,7 @@ MODEL="llama3.1:latest"
 
 The `.env` file is ignored by Git. Never force-add it.
 
-## Run the seven steps and four roles
+## Run the seven steps and CrewAI Flow
 
 ```bash
 .venv/bin/python desk.py COST --peers WMT,TGT,BJ --price 992.13
@@ -30,11 +30,17 @@ The `.env` file is ignored by Git. Never force-add it.
 
 The example uses Costco's October 27, 2026 close. Replace it with the dated price assigned by the instructor if that price differs. SEC filings do not contain a market price.
 
-The full command runs the seven data steps. It then runs the Research Analyst, Financial Analyst, Investment Advisor, and Strategy Manager. It saves `report.md` and `role_outputs.json` in the run folder.
+The full command runs the seven data steps and then starts `EquityResearchFlow`.
+CrewAI decorators fix this order in code:
 
-Each role receives only `task`, `context`, and `expected_output` in its JSON
-input. The Financial Analyst can call an allowlisted Python calculator for an
-additional ratio. The model does not calculate that result.
+`steps -> Research Analyst -> Financial Analyst -> Investment Advisor -> Strategy Manager -> Verifier`
+
+The model cannot choose the next node. The Strategy Manager can use one
+revision slot. Python selects the revision target from fixed checks, and no
+specialist runs more than twice. The Verifier always runs last.
+
+Each model role receives only `task`, `context`, and `expected_output`. Every
+node input and output is saved under `flow_artifacts/` in the run folder.
 
 Run only the seven data steps:
 
@@ -54,20 +60,29 @@ Run the tests:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-## Replicated verifier agent
+Run the CrewAI Flow on an existing seven-step run:
 
-The standalone verifier in `verifier_agent.py` adapts the final VerificationAgent from OpenAI's financial-research Agents SDK example. Its deterministic pass checks the 11 saved core claims, XBRL sources, ratio arithmetic and definitions, and cited filing-line existence. It does not inspect the Investment Advisor's thesis.
+```bash
+.venv/bin/python crewai_flow.py outputs/COST_20261028_194706
+```
+
+Run only the final evidence verifier:
+
+```bash
+.venv/bin/python crewai_flow.py outputs/COST_20261028_194706 --verify-only
+```
+
+## Replicated verifier
+
+The final Flow node replicates the paper's evidence-checking role. The exact
+pass checks the 11 saved core claims, XBRL sources, ratio arithmetic,
+definitions, and cited filing-line existence. It does not inspect the
+Investment Advisor's thesis.
 
 Verify a saved run without a model call:
 
 ```bash
 .venv/bin/python verifier_agent.py outputs/COST_20261028_194706
-```
-
-Run the optional OpenAI Agents SDK judgment after the deterministic checks:
-
-```bash
-.venv/bin/python verifier_agent.py outputs/COST_20261028_194706 --model-check
 ```
 
 Verify an edited report against the evidence from the original run:

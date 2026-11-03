@@ -12,7 +12,9 @@ python -m venv .venv
 .venv/bin/python desk.py WMT --peers COST,TGT,BJ
 ```
 
-All three automated tests passed. Both full runs printed Steps 1 through 7 and ended with a saved folder.
+All three automated tests that existed on the run date passed. The current
+submission suite contains nine tests. Both full runs printed Steps 1 through 7
+and ended with a saved folder.
 
 ## Costco known-answer check
 
@@ -56,11 +58,12 @@ The Walmart portability run independently returned total revenue of 713,163, ope
 
 Costco reports net sales and membership fees separately. The desk uses total revenue, not net sales, for revenue growth and operating margin. Mixing Costco net sales with a peer's total revenue would make the comparison inconsistent.
 
-## Items that still require the student
+## Later completion
 
-- Show the live run and saved evidence to Shachi Kaushik and obtain initials. The software cannot truthfully supply a partner's initials.
-- Use the exact close assigned in the instructor's demo if it differs from $904.70.
-- Give the two-minute explanation and complete any in-person discussion or checkout required by the course.
+- Mrunalini confirmed that Shachi Kaushik saw the live evidence and completed
+  the required partner checks.
+- The required in-person explanation was completed.
+- The Apple Checkpoint 1 run uses the assigned dated close of $338.19.
 
 This is a learning exercise, not financial advice.
 

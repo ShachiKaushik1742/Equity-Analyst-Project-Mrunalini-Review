@@ -2,7 +2,13 @@ import json
 import unittest
 from pathlib import Path
 
-from desk import Filing, calculate_ratios, release_evidence, verified_financial_claims
+from desk import (
+    Filing,
+    calculate_additional_ratio,
+    calculate_ratios,
+    release_evidence,
+    verified_financial_claims,
+)
 
 
 class CalculationTests(unittest.TestCase):
@@ -31,6 +37,27 @@ class CalculationTests(unittest.TestCase):
         self.assertAlmostEqual(ratios["debt_to_equity"]["value"], (3_914 + 2_248) / 35_803)
         self.assertEqual(ratios["free_cash_flow"]["value"], 9_382_000_000)
         self.assertAlmostEqual(ratios["price_to_earnings"]["value"], 950 / 20.76)
+
+    def test_financial_analyst_additional_ratios_use_code(self) -> None:
+        ratios = calculate_ratios(self.facts, 950.0)
+        expected = {
+            "net_margin": self.facts["net_income"]["value"] / self.facts["total_revenue"]["value"],
+            "free_cash_flow_margin": ratios["free_cash_flow"]["value"]
+            / self.facts["total_revenue"]["value"],
+            "cash_from_operations_margin": self.facts["cash_from_operations"]["value"]
+            / self.facts["total_revenue"]["value"],
+            "capital_expenditure_intensity": self.facts["capital_expenditures"]["value"]
+            / self.facts["total_revenue"]["value"],
+        }
+        for ratio_name, expected_value in expected.items():
+            with self.subTest(ratio_name=ratio_name):
+                result = calculate_additional_ratio(ratio_name, self.facts, ratios)
+                self.assertAlmostEqual(result["value"], expected_value)
+                self.assertIn(" / ", result["arithmetic"])
+                self.assertTrue(result["source_fact_names"])
+
+        with self.assertRaisesRegex(ValueError, "Unsupported calculator ratio"):
+            calculate_additional_ratio("model_generated_ratio", self.facts, ratios)
 
     def test_release_evidence_accepts_singular_revenue_label(self) -> None:
         html = """

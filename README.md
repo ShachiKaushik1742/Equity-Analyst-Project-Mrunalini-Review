@@ -32,6 +32,10 @@ The example uses Costco's October 27, 2026 close. Replace it with the dated pric
 
 The full command runs the seven data steps. It then runs the Research Analyst, Financial Analyst, Investment Advisor, and Strategy Manager. It saves `report.md` and `role_outputs.json` in the run folder.
 
+Each role receives only `task`, `context`, and `expected_output` in its JSON
+input. The Financial Analyst can call an allowlisted Python calculator for an
+additional ratio. The model does not calculate that result.
+
 Run only the seven data steps:
 
 ```bash

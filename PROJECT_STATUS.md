@@ -84,7 +84,7 @@ Verified Walmart portability run:
 Validation state:
 
 - Python version: 3.13.15.
-- Five automated tests pass.
+- Nine automated tests pass.
 - `python -m compileall` passes.
 - `git diff --check` passes.
 - A public GitHub check returned HTTP 200 for the code, validation file, and Costco facts.
@@ -98,6 +98,8 @@ Validation state:
 - `papers/FRL-CanAIReplaceAnalyst.pdf` is the 9-page paper titled “Can AI match professional analysts? Evidence from a multi-agent system.”
 - The uploaded PDF checksum matched the copy in Downloads.
 - `library/lab02_equity_research_desk_prompt.md` contains the reconstructed Lab 02 prompt written approximately 80% toward ASD-STE100.
+- `library/lab03_four_role_app_prompt.md` contains the reconstructed Lab 03
+  four-role prompt written approximately 80% toward ASD-STE100.
 
 ### Lab 03 — completed in the app
 
@@ -106,6 +108,9 @@ Validation state:
 - The live provider test succeeded with `llama3.1:latest`.
 - `desk.py` runs four model roles after the seven data steps: Research Analyst, Financial Analyst, Investment Advisor, and Strategy Manager.
 - Each role receives a JSON object with its task, allowed context, and expected output.
+- Each role input JSON contains exactly `task`, `context`, and `expected_output`.
+- The Financial Analyst can call an allowlisted Python calculator tool for an
+  additional ratio; the model does not calculate the result.
 - The Financial Analyst receives a calculator-built block and must not recalculate it.
 - The harness permits one revision when a Financial Analyst draft changes or omits a verified value.
 - The harness rejects a Strategy Manager compilation that omits the five parts, the verified values, a research citation, or a sourced deciding number.
@@ -132,10 +137,20 @@ Apple assignment run:
   labeled `fallback`, which the Lab 03 instructions permit when the provider is down.
 - Apple report: `outputs/AAPL_20261028_202525/report.md`.
 - Apple human-audit worksheet: `audits/AAPL_20261028_human_audit.md`.
+- The student confirmed that Apple is the instructor-approved Checkpoint 1 company.
+- The student confirmed that Shachi completed both required partner checks.
+- The audit names both checked claims and records both marks.
+- The Apple peer evidence now attempts all 9 Step 4 concepts for each peer and
+  explicitly records a concept as unavailable when EDGAR has no candidate tag.
 - Checkpoint 1 was submitted in Brightspace on 2026-10-28 at 8:33 PM.
 - Brightspace submission ID: `23584866`.
 - Submitted commit permalink:
   <https://github.com/mrunalinipol/Equity-Analyst-Project/commit/c25b468906b1dec8dc66181ca4b9245e2fd23c69>.
+- On 2026-10-28, the student instructed the agent to delete this submission and
+  never submit coursework again. Brightspace gives learners no delete control.
+  The instructor must delete submission `23584866`.
+- Permanent operating rule: prepare files only. Do not submit, upload, send,
+  publish, or turn in coursework unless the student explicitly reverses this rule.
 
 ## Main commands
 
@@ -172,9 +187,10 @@ Run the tests:
 
 ## Remaining actions
 
-1. Mrunalini must audit the Apple report by hand and fill `audits/AAPL_20261028_human_audit.md`. AI must not supply the marks.
-2. Shachi Kaushik must check two Apple core claims and write both marks at the top of the audit file.
-3. Mrunalini must audit all eleven Apple claims before Session 4.
+1. Ask the instructor to delete Brightspace submission `23584866`.
+2. Confirm that `.env` is absent from the public final commit.
+3. Submit the final commit permalink in Brightspace. The agent must not perform
+   this submission.
 
 ## Working rules for the next session
 

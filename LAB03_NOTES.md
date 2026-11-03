@@ -6,6 +6,12 @@ The Financial Analyst is the role most likely to get a number wrong. A model can
 
 The harness now gives the role a calculator-built block and refuses a draft that changes or omits a required value. It permits one revision. If that revision still fails, the harness uses the calculator-built block instead of the rejected model text.
 
+For literal compliance with the Lab 03 request, each role input JSON contains
+only `task`, `context`, and `expected_output`. The Financial Analyst can request
+an allowlisted additional ratio through the official SDK's calculator tool.
+Python returns the value, arithmetic, definition, and source fact names. The
+model does not calculate the ratio.
+
 ## Human sign-off
 
 Anthropic's financial-services repository says its agents draft analyst work for review by a qualified professional. The agents do not make investment recommendations, execute transactions, bind risk, post to a ledger, or approve onboarding. Every output is staged for human sign-off.
@@ -23,13 +29,13 @@ Source: <https://github.com/anthropics/financial-services>
 - The eleven core claims are present with filing accessions, XBRL tags or Exhibit 99.1 lines, periods, definitions, and arithmetic.
 - The human audit template is `audits/COST_20261028_human_audit.md`.
 
-## Work that requires the student or partner
+## Completed student and partner work for Checkpoint 1
 
-1. Mrunalini must fill the Costco audit marks by hand. AI must not supply the marks.
-2. Shachi Kaushik must choose a U.S. company that reported this month.
-3. Run the same desk on that ticker with suitable peers and a dated close.
-4. Shachi must check two core claims in that report and write both marks at the top of its file.
-5. Mrunalini must audit all eleven partner-company claims before Session 4.
+1. Apple was the instructor-approved Checkpoint 1 company.
+2. The desk was run on Apple with MSFT, GOOGL, and DELL as peers and with a dated close.
+3. Mrunalini completed the Apple human audit without AI supplying the marks.
+4. Shachi Kaushik checked two core claims: total net sales and quarter diluted EPS.
+5. Both partner marks are recorded at the top of `audits/AAPL_20261028_human_audit.md`.
 
 ## Apple assignment run
 

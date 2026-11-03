@@ -364,6 +364,26 @@ def extract_facts(
     return output
 
 
+def extract_peer_facts(company_facts: dict[str, Any], filing: Filing) -> dict[str, dict[str, Any]]:
+    """Read every main-company fact for a peer and state when a fact is unavailable."""
+    output: dict[str, dict[str, Any]] = {}
+    for name in FACT_SPECS:
+        try:
+            output.update(extract_facts(company_facts, filing, (name,)))
+        except KeyError as error:
+            output[name] = {
+                "available": False,
+                "reason": str(error),
+                "form": filing.form,
+                "accession": filing.accession,
+                "end": filing.report_date,
+            }
+    for required_name in ("total_revenue", "operating_income"):
+        if output[required_name].get("available") is False:
+            raise KeyError(f"Peer is missing required {required_name}: {output[required_name]['reason']}")
+    return output
+
+
 def safe_divide(numerator: float, denominator: float, label: str) -> float:
     if denominator == 0:
         raise ZeroDivisionError(f"Cannot calculate {label}: denominator is zero.")
@@ -418,6 +438,59 @@ def calculate_ratios(facts: dict[str, dict[str, Any]], price: float | None) -> d
     return ratios
 
 
+def calculate_additional_ratio(
+    ratio_name: str,
+    facts: dict[str, dict[str, Any]],
+    ratios: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    """Calculate an approved extra ratio in code for the Financial Analyst."""
+    revenue = float(facts["total_revenue"]["value"])
+    calculations: dict[str, tuple[float, str, str, list[str]]] = {
+        "net_margin": (
+            safe_divide(float(facts["net_income"]["value"]), revenue, "net margin"),
+            f"{float(facts['net_income']['value']):g} / {revenue:g}",
+            "net income / total revenue",
+            ["net_income", "total_revenue"],
+        ),
+        "free_cash_flow_margin": (
+            safe_divide(float(ratios["free_cash_flow"]["value"]), revenue, "free cash flow margin"),
+            f"{float(ratios['free_cash_flow']['value']):g} / {revenue:g}",
+            "free cash flow / total revenue",
+            ["cash_from_operations", "capital_expenditures", "total_revenue"],
+        ),
+        "cash_from_operations_margin": (
+            safe_divide(
+                float(facts["cash_from_operations"]["value"]),
+                revenue,
+                "cash from operations margin",
+            ),
+            f"{float(facts['cash_from_operations']['value']):g} / {revenue:g}",
+            "cash from operations / total revenue",
+            ["cash_from_operations", "total_revenue"],
+        ),
+        "capital_expenditure_intensity": (
+            safe_divide(
+                float(facts["capital_expenditures"]["value"]),
+                revenue,
+                "capital expenditure intensity",
+            ),
+            f"{float(facts['capital_expenditures']['value']):g} / {revenue:g}",
+            "additions to property and equipment / total revenue",
+            ["capital_expenditures", "total_revenue"],
+        ),
+    }
+    if ratio_name not in calculations:
+        raise ValueError(f"Unsupported calculator ratio: {ratio_name}")
+    value, arithmetic, definition, source_fact_names = calculations[ratio_name]
+    return {
+        "name": ratio_name,
+        "value": value,
+        "arithmetic": arithmetic,
+        "definition": definition,
+        "source_fact_names": source_fact_names,
+    }
+
+
 def numeric_cells(row: str) -> list[float]:
     values = re.findall(r"(?<![A-Za-z])\(?\$?(\d[\d,]*(?:\.\d+)?)\)?", row)
     return [float(value.replace(",", "")) for value in values]
@@ -426,7 +499,7 @@ def numeric_cells(row: str) -> list[float]:
 def release_evidence(html: str) -> dict[str, Any]:
     rows = table_rows(html)
     # Preserve the filer's label. Some issuers use "total revenue," while
-    # Apple uses "total net sales" for the same top-line concept.
+    # other issuers use "total net sales" for the same top-line concept.
     total_revenue = next(
         (row for row in rows if re.search(r"\btotal (?:revenues?|net sales)\b", row, re.I)),
         "",
@@ -501,6 +574,8 @@ FINANCIAL_ANALYST_SYSTEM = (
     "step 6's quarter evidence, and step 7's peer data.\n"
     "State the source filing and the line, or the XBRL tag, period, and accession, for every number.\n"
     "Copy each ratio's supplied arithmetic. Do not calculate a new number in the model.\n"
+    "If you need an additional approved ratio, call the calculate_ratio tool. "
+    "Do not estimate or calculate the tool result yourself.\n"
     "State the definition when a filing offers two definitions.\n"
     "Cover all 11 core claims in the expected output. Use only supplied values.\n"
     "Use these exact headings:\n"
@@ -731,7 +806,6 @@ def run_four_roles(
     # 1. Research Analyst
     print("Role: Research Analyst", flush=True)
     research_task = {
-        "role": "Research Analyst",
         "task": (
             "Analyze business model, competitive position, catalysts, and recent developments. "
             "Use only the provided 10-K and Exhibit 99.1 excerpts. "
@@ -764,7 +838,6 @@ def run_four_roles(
     print("Role: Financial Analyst", flush=True)
     verified_block = verified_financial_claims(filings, facts, ratios, evidence, peers)
     financial_task = {
-        "role": "Financial Analyst",
         "task": (
             "Perform statement analysis from step 4's facts, step 5's ratios, "
             "step 6's quarter evidence, and step 7's peer data. "
@@ -796,16 +869,72 @@ def run_four_roles(
             "Every ratio must copy the supplied arithmetic."
         ),
     }
-    financial_resp = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": FINANCIAL_ANALYST_SYSTEM},
-            {"role": "user", "content": json.dumps(financial_task)},
-        ],
-        max_tokens=2200,
-        temperature=0.2,
-    )
-    financial_output = financial_resp.choices[0].message.content or ""
+    calculator_tool = {
+        "type": "function",
+        "function": {
+            "name": "calculate_ratio",
+            "description": "Calculate one approved additional financial ratio in Python.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "ratio_name": {
+                        "type": "string",
+                        "enum": [
+                            "net_margin",
+                            "free_cash_flow_margin",
+                            "cash_from_operations_margin",
+                            "capital_expenditure_intensity",
+                        ],
+                    }
+                },
+                "required": ["ratio_name"],
+                "additionalProperties": False,
+            },
+        },
+    }
+    financial_messages: list[dict[str, Any]] = [
+        {"role": "system", "content": FINANCIAL_ANALYST_SYSTEM},
+        {"role": "user", "content": json.dumps(financial_task)},
+    ]
+    calculator_results: list[dict[str, Any]] = []
+    financial_output = ""
+    for _ in range(3):
+        financial_resp = client.chat.completions.create(
+            model=model,
+            messages=financial_messages,
+            tools=[calculator_tool],
+            tool_choice="auto",
+            max_tokens=2200,
+            temperature=0.2,
+        )
+        financial_message = financial_resp.choices[0].message
+        tool_calls = financial_message.tool_calls or []
+        if not tool_calls:
+            financial_output = financial_message.content or ""
+            break
+        financial_messages.append(
+            {
+                "role": "assistant",
+                "content": financial_message.content or "",
+                "tool_calls": [tool_call.model_dump() for tool_call in tool_calls],
+            }
+        )
+        for tool_call in tool_calls:
+            try:
+                arguments = json.loads(tool_call.function.arguments)
+                result = calculate_additional_ratio(arguments["ratio_name"], facts, ratios)
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
+                result = {"error": str(error)}
+            calculator_results.append(result)
+            financial_messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": json.dumps(result),
+                }
+            )
+    else:
+        raise RuntimeError("Financial Analyst exceeded the calculator request limit.")
     rejected_financial_drafts: list[str] = []
     revised_roles: set[str] = set()
     required_financial_tokens = [
@@ -855,7 +984,6 @@ def run_four_roles(
     # 3. Investment Advisor
     print("Role: Investment Advisor", flush=True)
     advisor_task = {
-        "role": "Investment Advisor",
         "task": (
             "Synthesize the findings of the Research Analyst and Financial Analyst into an investment thesis "
             "and a Buy, Hold, or Sell recommendation. "
@@ -896,7 +1024,6 @@ def run_four_roles(
     def manager_call(round_number: int) -> tuple[dict[str, Any], str]:
         print(f"Role: Strategy Manager (check {round_number})", flush=True)
         manager_task = {
-            "role": "Strategy Manager",
             "task": (
                 "Check the role outputs. Confirm that all five required report parts are present and consistent. "
                 "Check that the Financial Analyst states all 11 core claims, sources every number, copies ratio "
@@ -1049,6 +1176,7 @@ def run_four_roles(
         "model": model,
         "research_analyst": research_output,
         "financial_analyst": financial_output,
+        "financial_calculator_results": calculator_results,
         "rejected_financial_drafts": rejected_financial_drafts,
         "investment_advisor": advisor_output,
         "strategy_manager_checks": manager_checks,
@@ -1191,11 +1319,7 @@ def run() -> Path | None:
             peer_company = resolve_ticker(client, peer_ticker)
             peer_filings = select_filings(client, peer_company.cik)
             peer_company_facts = client.json(f"{SEC_DATA}/api/xbrl/companyfacts/CIK{peer_company.cik}.json")
-            peer_facts = extract_facts(
-                peer_company_facts,
-                peer_filings["10-K"],
-                ("total_revenue", "operating_income"),
-            )
+            peer_facts = extract_peer_facts(peer_company_facts, peer_filings["10-K"])
             peer_revenue = float(peer_facts["total_revenue"]["value"])
             peer_operating_income = float(peer_facts["operating_income"]["value"])
             operating_margin = {
@@ -1209,12 +1333,18 @@ def run() -> Path | None:
                 "facts": peer_facts,
                 "operating_margin": operating_margin,
             }
-            fact = peer_facts["total_revenue"]
-            operating = peer_facts["operating_income"]
-            margin = operating_margin
+            print(f"  {peer_ticker}:")
+            for fact_name, fact in peer_facts.items():
+                if fact.get("available") is False:
+                    print(f"    {fact_name}: unavailable | {fact['reason']}")
+                else:
+                    print(
+                        f"    {fact_name}: {fact['value']} {fact['unit']} | "
+                        f"tag {fact['tag']} | period {fact['end']} | {fact['form']} {fact['accession']}"
+                    )
             print(
-                f"  {peer_ticker}: revenue {fact['value']} ({fact['tag']}, {fact['end']}); "
-                f"operating income {operating['value']}; margin {margin['value'] * 100:.4f}%"
+                f"    operating_margin: {operating_margin['value'] * 100:.4f}% | "
+                f"{operating_margin['arithmetic']} | {operating_margin['definition']}"
             )
         write_json(run_folder / "peers.json", peer_results)
 

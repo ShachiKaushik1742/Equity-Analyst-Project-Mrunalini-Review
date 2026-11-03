@@ -8,6 +8,14 @@
 __pycache__/
 *.py[cod]
 .venv/
+tmp/
+
+# Diagnostic runs that are not part of Checkpoint 1
+outputs/AAPL_20261028_202046/
+outputs/AAPL_20261028_202107/
+outputs/AAPL_20261028_202236/
+outputs/AAPL_20261028_202243/
+outputs/AAPL_20261028_211847/
 
 # macOS metadata
 .DS_Store

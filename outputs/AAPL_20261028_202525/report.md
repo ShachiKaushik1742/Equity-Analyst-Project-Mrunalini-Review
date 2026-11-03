@@ -1,4 +1,4 @@
-# Filings Read: 10-K (accession: 0000320193-25-000079), 10-Q (accession: 0000320193-26-000020), 8-K (accession: 0000320193-26-000018)
+# Apple Inc. (AAPL) — Filings Read: 10-K (accession: 0000320193-25-000079), 10-Q (accession: 0000320193-26-000020), 8-K (accession: 0000320193-26-000018)
 fallback
 Run time: 2026-10-28T20:25:25-04:00
 

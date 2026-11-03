@@ -54,6 +54,28 @@ Run the tests:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
+## Replicated verifier agent
+
+The standalone verifier in `verifier_agent.py` adapts the final VerificationAgent from OpenAI's financial-research Agents SDK example. Its deterministic pass checks the 11 saved core claims, XBRL sources, ratio arithmetic and definitions, and cited filing-line existence. It does not inspect the Investment Advisor's thesis.
+
+Verify a saved run without a model call:
+
+```bash
+.venv/bin/python verifier_agent.py outputs/COST_20261028_194706
+```
+
+Run the optional OpenAI Agents SDK judgment after the deterministic checks:
+
+```bash
+.venv/bin/python verifier_agent.py outputs/COST_20261028_194706 --model-check
+```
+
+Verify an edited report against the evidence from the original run:
+
+```bash
+.venv/bin/python verifier_agent.py outputs/COST_20261028_194706 --report path/to/edited-report.md
+```
+
 Apple assignment command:
 
 ```bash

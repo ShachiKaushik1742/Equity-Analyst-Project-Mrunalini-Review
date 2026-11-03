@@ -1,6 +1,6 @@
 # Project Status and Session Handoff
 
-Last updated: 2026-10-28
+Last updated: 2026-11-03
 
 Read this file at the start of the next session. It records the verified project state. Do not put API keys or other secret values in this file.
 
@@ -100,6 +100,33 @@ Validation state:
 - `library/lab02_equity_research_desk_prompt.md` contains the reconstructed Lab 02 prompt written approximately 80% toward ASD-STE100.
 - `library/lab03_four_role_app_prompt.md` contains the reconstructed Lab 03
   four-role prompt written approximately 80% toward ASD-STE100.
+- `papers/WEEK3_READINGS.md` records the two required and two optional Week 3
+  readings, the framework choice, and the requested one-line responses.
+- `papers/openai-agents-sdk-reference.zip` contains the official MIT-licensed
+  OpenAI Agents SDK first page and financial-research verifier reference.
+- The reading bundle was uploaded first in GitHub commit
+  `e1c8309ebe3ce9163a5a17819ac3bfcf20b6d691`.
+
+### Week 3 verifier-agent replication
+
+- Framework choice: OpenAI Agents SDK 0.24.0. Its package metadata requires
+  Python 3.10 or later, so the local Python 3.13.15 is supported.
+- `verifier_agent.py` adapts the final `VerificationAgent` from OpenAI's
+  financial-research example to the saved SEC evidence in this desk.
+- `roles/verifier.md` holds the evidence-bound verifier instructions.
+- The deterministic pass checks all 11 core claims, XBRL source tokens, ratio
+  arithmetic, required definitions, and the existence of cited filing lines.
+- The Investment Advisor's thesis and recommendation are outside the verifier's
+  scope, as required.
+- The optional `--model-check` pass uses the Agents SDK with the OpenAI-compatible
+  `API_KEY`, `BASE_URL`, and `MODEL` values from `.env`.
+- Four verifier tests pass: clean report, seeded EPS error, missing XBRL source,
+  and the Investment Advisor scope exclusion.
+- `python3 -m compileall -q verifier_agent.py tests/test_verifier_agent.py` passes.
+- The clean Costco CLI run returns exit code 0, `verified: true`, 24 total marks,
+  and 11 correct core-claim marks.
+- The complete legacy suite could not start in this restored workspace because
+  the project dependencies are not installed; `requests` is missing.
 
 ### Lab 03 — completed in the app
 
@@ -191,6 +218,10 @@ Run the tests:
 2. Confirm that `.env` is absent from the public final commit.
 3. Submit the final commit permalink in Brightspace. The agent must not perform
    this submission.
+4. Create or activate `.venv`, install `requirements.txt`, and run the complete
+   test suite before the next checkpoint.
+5. Run `verifier_agent.py` with `--model-check` when the Purdue model endpoint is
+   available, then save the structured model judgment with the run.
 
 ## Working rules for the next session
 

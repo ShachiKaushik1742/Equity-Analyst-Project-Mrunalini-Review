@@ -1,0 +1,59 @@
+{
+  "accepted_from_index": {
+    "10-K": "2026-10-06 21:13:15",
+    "10-Q": "2026-06-03 16:43:00",
+    "earnings_8-K": "2026-09-24 16:17:37"
+  },
+  "arguments": {
+    "peers": [
+      "WMT",
+      "TGT",
+      "BJ"
+    ],
+    "price": 992.13,
+    "step": null,
+    "ticker": "COST"
+  },
+  "company": {
+    "cik": "0000909832",
+    "name": "COSTCO WHOLESALE CORP /NEW",
+    "ticker": "COST"
+  },
+  "filings": {
+    "10-K": {
+      "accepted": "2026-10-07T01:13:15.000Z",
+      "accession": "0000909832-26-000093",
+      "filing_date": "2026-10-07",
+      "form": "10-K",
+      "items": "",
+      "primary_document": "cost-20260830.htm",
+      "report_date": "2026-08-30"
+    },
+    "10-Q": {
+      "accepted": "2026-06-03T20:43:00.000Z",
+      "accession": "0000909832-26-000051",
+      "filing_date": "2026-06-03",
+      "form": "10-Q",
+      "items": "",
+      "primary_document": "cost-20260510.htm",
+      "report_date": "2026-05-10"
+    },
+    "earnings_8-K": {
+      "accepted": "2026-09-24T20:17:37.000Z",
+      "accession": "0000909832-26-000084",
+      "filing_date": "2026-09-24",
+      "form": "8-K",
+      "items": "2.02,9.01",
+      "primary_document": "cost-20260924.htm",
+      "report_date": "2026-09-24"
+    }
+  },
+  "model_run": {
+    "manager_checks": 1,
+    "manager_report_accepted": false,
+    "model": "llama3.1:latest",
+    "provider": "Purdue GenAI Studio"
+  },
+  "release_url": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000084/costex9918-k92426.htm",
+  "run_time": "2026-10-28T19:47:06.103931-04:00"
+}

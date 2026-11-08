@@ -1,0 +1,29 @@
+{
+  "source_clean_run": "outputs/COST_20261028_194706",
+  "folders": {
+    "clean": "lab04_evidence/COST_20261107_123023_clean",
+    "seeded_eps": "lab04_evidence/COST_20261107_123023_seeded_eps",
+    "invented_growth": "lab04_evidence/COST_20261107_123023_invented_growth"
+  },
+  "proofs": {
+    "clean": {
+      "verified": true,
+      "wrong": [],
+      "unsupported": []
+    },
+    "seeded_eps": {
+      "verified": false,
+      "wrong": [
+        "GAAP diluted EPS"
+      ],
+      "unsupported": []
+    },
+    "invented_growth": {
+      "verified": false,
+      "wrong": [
+        "Quoted revenue-growth claim 1"
+      ],
+      "unsupported": []
+    }
+  }
+}

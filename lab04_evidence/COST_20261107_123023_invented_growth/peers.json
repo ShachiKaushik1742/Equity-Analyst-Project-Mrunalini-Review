@@ -1,0 +1,161 @@
+{
+  "BJ": {
+    "company": {
+      "cik": "0001531152",
+      "name": "BJ's Wholesale Club Holdings, Inc.",
+      "ticker": "BJ"
+    },
+    "facts": {
+      "operating_income": {
+        "accession": "0001531152-26-000007",
+        "end": "2026-01-31",
+        "filed": "2026-03-12",
+        "fiscal_period": "FY",
+        "fiscal_year": 2025,
+        "form": "10-K",
+        "prior_end": "2025-02-01",
+        "prior_start": "2024-02-04",
+        "prior_value": 772206000,
+        "start": "2025-02-02",
+        "tag": "OperatingIncomeLoss",
+        "unit": "USD",
+        "value": 816604000
+      },
+      "total_revenue": {
+        "accession": "0001531152-26-000007",
+        "end": "2026-01-31",
+        "filed": "2026-03-12",
+        "fiscal_period": "FY",
+        "fiscal_year": 2025,
+        "form": "10-K",
+        "prior_end": "2025-02-01",
+        "prior_start": "2024-02-04",
+        "prior_value": 20501804000,
+        "start": "2025-02-02",
+        "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "unit": "USD",
+        "value": 21457274000
+      }
+    },
+    "filing": {
+      "accepted": "2026-03-12T20:15:55.000Z",
+      "accession": "0001531152-26-000007",
+      "filing_date": "2026-03-12",
+      "form": "10-K",
+      "items": "",
+      "primary_document": "bj-20260131.htm",
+      "report_date": "2026-01-31"
+    },
+    "operating_margin": {
+      "arithmetic": "8.16604e+08 / 2.14573e+10",
+      "definition": "operating income / total revenue",
+      "value": 0.03805721080879146
+    }
+  },
+  "TGT": {
+    "company": {
+      "cik": "0000027419",
+      "name": "TARGET CORP",
+      "ticker": "TGT"
+    },
+    "facts": {
+      "operating_income": {
+        "accession": "0000027419-26-000016",
+        "end": "2026-01-31",
+        "filed": "2026-03-11",
+        "fiscal_period": "FY",
+        "fiscal_year": 2025,
+        "form": "10-K",
+        "prior_end": "2025-02-01",
+        "prior_start": "2024-02-04",
+        "prior_value": 5566000000,
+        "start": "2025-02-02",
+        "tag": "OperatingIncomeLoss",
+        "unit": "USD",
+        "value": 5117000000
+      },
+      "total_revenue": {
+        "accession": "0000027419-26-000016",
+        "end": "2026-01-31",
+        "filed": "2026-03-11",
+        "fiscal_period": "FY",
+        "fiscal_year": 2025,
+        "form": "10-K",
+        "prior_end": "2025-02-01",
+        "prior_start": "2024-02-04",
+        "prior_value": 106566000000,
+        "start": "2025-02-02",
+        "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "unit": "USD",
+        "value": 104780000000
+      }
+    },
+    "filing": {
+      "accepted": "2026-03-11T20:42:00.000Z",
+      "accession": "0000027419-26-000016",
+      "filing_date": "2026-03-11",
+      "form": "10-K",
+      "items": "",
+      "primary_document": "tgt-20260131.htm",
+      "report_date": "2026-01-31"
+    },
+    "operating_margin": {
+      "arithmetic": "5.117e+09 / 1.0478e+11",
+      "definition": "operating income / total revenue",
+      "value": 0.048835655659477
+    }
+  },
+  "WMT": {
+    "company": {
+      "cik": "0000104169",
+      "name": "Walmart Inc.",
+      "ticker": "WMT"
+    },
+    "facts": {
+      "operating_income": {
+        "accession": "0000104169-26-000055",
+        "end": "2026-01-31",
+        "filed": "2026-03-13",
+        "fiscal_period": "FY",
+        "fiscal_year": 2026,
+        "form": "10-K",
+        "prior_end": "2025-01-31",
+        "prior_start": "2024-02-01",
+        "prior_value": 29348000000,
+        "start": "2025-02-01",
+        "tag": "OperatingIncomeLoss",
+        "unit": "USD",
+        "value": 29825000000
+      },
+      "total_revenue": {
+        "accession": "0000104169-26-000055",
+        "end": "2026-01-31",
+        "filed": "2026-03-13",
+        "fiscal_period": "FY",
+        "fiscal_year": 2026,
+        "form": "10-K",
+        "prior_end": "2025-01-31",
+        "prior_start": "2024-02-01",
+        "prior_value": 680985000000,
+        "start": "2025-02-01",
+        "tag": "Revenues",
+        "unit": "USD",
+        "value": 713163000000
+      }
+    },
+    "filing": {
+      "accepted": "2026-03-13T20:06:24.000Z",
+      "accession": "0000104169-26-000055",
+      "filing_date": "2026-03-13",
+      "form": "10-K",
+      "items": "",
+      "primary_document": "wmt-20260131.htm",
+      "report_date": "2026-01-31"
+    },
+    "operating_margin": {
+      "arithmetic": "2.9825e+10 / 7.13163e+11",
+      "definition": "operating income / total revenue",
+      "value": 0.041820733829433104
+    }
+  }
+}

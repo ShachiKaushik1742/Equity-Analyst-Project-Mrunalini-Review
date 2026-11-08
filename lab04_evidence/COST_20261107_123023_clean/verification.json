@@ -1,0 +1,174 @@
+{
+  "mode": "deterministic Lab 04 proof; the model semantic pass remains required for a live Flow run",
+  "verified": true,
+  "marks": [
+    {
+      "claim": "Total revenue",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `RevenueFromContractWithCustomerExcludingAssessedTax`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Revenue growth",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `RevenueFromContractWithCustomerExcludingAssessedTax`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Operating income and operating margin",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `OperatingIncomeLoss`; period ended 2026-08-30; 10-K accession 0000909832-26-000093; XBRL tag `RevenueFromContractWithCustomerExcludingAssessedTax`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Net income attributable to the company",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `NetIncomeLoss`; period ended 2026-08-30"
+    },
+    {
+      "claim": "GAAP diluted EPS",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `EarningsPerShareDiluted`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Return on average equity",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `NetIncomeLoss`; period ended 2026-08-30; 10-K accession 0000909832-26-000093; XBRL tag `StockholdersEquity`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Debt to equity",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `LongTermDebtNoncurrent`; period ended 2026-08-30; 10-K accession 0000909832-26-000093; XBRL tag `LongTermDebtCurrent`; period ended 2026-08-30; 10-K accession 0000909832-26-000093; XBRL tag `StockholdersEquity`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Free cash flow",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "10-K accession 0000909832-26-000093; XBRL tag `NetCashProvidedByUsedInOperatingActivities`; period ended 2026-08-30; 10-K accession 0000909832-26-000093; XBRL tag `PaymentsToAcquirePropertyPlantAndEquipment`; period ended 2026-08-30"
+    },
+    {
+      "claim": "Latest-quarter total revenue",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "Exhibit 99.1 line `Total revenue | 95,723 | 86,156 | 303,154 | 275,235`"
+    },
+    {
+      "claim": "Quarter revenue growth",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "Exhibit 99.1 line `Total revenue | 95,723 | 86,156 | 303,154 | 275,235`"
+    },
+    {
+      "claim": "Latest-quarter GAAP diluted EPS",
+      "mark": "correct",
+      "explanation": "The stated value, arithmetic, definition when required, and source match the saved run.",
+      "correction": "",
+      "source": "Exhibit 99.1 line `Diluted | $ | 6.75 | $ | 5.87 | $ | 20.76 | $ | 18.21`"
+    },
+    {
+      "claim": "10-K Line 801",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We operate membership warehouses and e-commerce sites based on the concept that offering low prices on a limited selection of nationally-branded and private-label products in a wide range of categories will produce high sales volumes and rapid inventory turnover. When combined with the operating efficiencies achieved by volume purchasing, efficient distribution and reduced handling of merchandise in no-frills, self-service warehouse facilities, these volumes and turnover enable us to operate profitably at significantly lower gross margins (net sales less merchandise costs) than most other retailers. We often sell inventory before we are required to pay for it, even while taking advantage of early payment discounts."
+    },
+    {
+      "claim": "10-K Line 802",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We buy most of our merchandise directly from suppliers and route it to cross-docking consolidation points (depots) or directly to our warehouses. Our depots receive large shipments from suppliers and quickly"
+    },
+    {
+      "claim": "10-K Line 801",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We operate membership warehouses and e-commerce sites based on the concept that offering low prices on a limited selection of nationally-branded and private-label products in a wide range of categories will produce high sales volumes and rapid inventory turnover. When combined with the operating efficiencies achieved by volume purchasing, efficient distribution and reduced handling of merchandise in no-frills, self-service warehouse facilities, these volumes and turnover enable us to operate profitably at significantly lower gross margins (net sales less merchandise costs) than most other retailers. We often sell inventory before we are required to pay for it, even while taking advantage of early payment discounts."
+    },
+    {
+      "claim": "10-K Line 802",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We buy most of our merchandise directly from suppliers and route it to cross-docking consolidation points (depots) or directly to our warehouses. Our depots receive large shipments from suppliers and quickly"
+    },
+    {
+      "claim": "10-K Line 836",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "Membership"
+    },
+    {
+      "claim": "10-K Line 1328",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We opened 28 new warehouses, including three relocations, for a total of 25 net new warehouses: 18 in the U.S., five in our Canadian segment, and two in our Other International segment, compared to 27 new warehouses, including three relocations, in 2025;"
+    },
+    {
+      "claim": "EX-99.1 Line 11",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "Comparable sales for the fourth quarter and fiscal year were as follows:"
+    },
+    {
+      "claim": "EX-99.1 Line 44",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "Net income for the fourth quarter was $2.998 billion, $6.75 per diluted share, compared to $2.610 billion, $5.87 per diluted share, last year. This year's fourth quarter was positively impacted by a non-recurring benefit of $0.15 per diluted share from IEEPA tariff refunds received in the quarter, less partial reinvestment of those refunds in increased member values. Net income for the fiscal year was $9.226 billion, $20.76 per diluted share, compared to $8.099 billion, $18.21 per diluted share, last year."
+    },
+    {
+      "claim": "10-K Line 1347",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We applied the gain contingency model, in accordance with Accounting Standards Codification (ASC) 450-30, “Gain Contingencies,” recognizing recoveries in our consolidated statements of operations only as they were realized. During 2026, we began filing for refunds and received $184, made up of $174 in refunds, recorded as a reduction to merchandise costs, and $10 recorded as interest income. A portion of these refunds was invested in reducing prices for members. Subsequent to 2026, we received $155 in additional refunds and we intend to continue to invest the majority of the refunds in increased value for the member. For a small percentage of transactions where corrections are required, refunds may be delayed as the government continues to implement the IEEPA refund process."
+    },
+    {
+      "claim": "10-K Line 1328",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We opened 28 new warehouses, including three relocations, for a total of 25 net new warehouses: 18 in the U.S., five in our Canadian segment, and two in our Other International segment, compared to 27 new warehouses, including three relocations, in 2025;"
+    },
+    {
+      "claim": "EX-99.1 Line 11",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "Comparable sales for the fourth quarter and fiscal year were as follows:"
+    },
+    {
+      "claim": "EX-99.1 Line 44",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "Net income for the fourth quarter was $2.998 billion, $6.75 per diluted share, compared to $2.610 billion, $5.87 per diluted share, last year. This year's fourth quarter was positively impacted by a non-recurring benefit of $0.15 per diluted share from IEEPA tariff refunds received in the quarter, less partial reinvestment of those refunds in increased member values. Net income for the fiscal year was $9.226 billion, $20.76 per diluted share, compared to $8.099 billion, $18.21 per diluted share, last year."
+    },
+    {
+      "claim": "10-K Line 1347",
+      "mark": "correct",
+      "explanation": "The cited line exists in the saved filing text.",
+      "correction": "",
+      "source": "We applied the gain contingency model, in accordance with Accounting Standards Codification (ASC) 450-30, “Gain Contingencies,” recognizing recoveries in our consolidated statements of operations only as they were realized. During 2026, we began filing for refunds and received $184, made up of $174 in refunds, recorded as a reduction to merchandise costs, and $10 recorded as interest income. A portion of these refunds was invested in reducing prices for members. Subsequent to 2026, we received $155 in additional refunds and we intend to continue to invest the majority of the refunds in increased value for the member. For a small percentage of transactions where corrections are required, refunds may be delayed as the government continues to implement the IEEPA refund process."
+    }
+  ]
+}
